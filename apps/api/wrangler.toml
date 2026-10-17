@@ -1,0 +1,16 @@
+name = "dhun-api"
+main = "src/index.ts"
+compatibility_date = "2024-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "production"
+
+# Secrets set via `wrangler secret put`:
+# DATABASE_URL   – Neon connection string (pooled)
+# ROUND_SECRET   – 32-byte hex string for signing round tokens
+# AUDIO_PROXY_SECRET – shared secret for audio proxy requests (optional)
+
+[[routes]]
+pattern = "api.dhun.app/*"
+zone_name = "dhun.app"

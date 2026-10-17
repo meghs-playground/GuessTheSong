@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Dhun design tokens ─────────────────────────────────────── */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-frosted-blue: #a7e2e3;
+  --color-maya-blue: #6bbaec;
+  --color-apricot: #f9c784;
+  --color-orchid: #efbdeb;
+  --color-teal: #5f7367;
+
+  --font-sans: 'Space Grotesk', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-brutal: 4px 4px 0 #000;
+  --shadow-brutal-sm: 2px 2px 0 #000;
+  --border-brutal: 3px solid #000;
+}
+
+/* ── Base ────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--color-frosted-blue);
+  color: var(--color-ink);
+  min-height: 100dvh;
+  margin: 0;
+}
+
+/* ── Neobrutalist utilities ──────────────────────────────────── */
+.brutal-border {
+  border: var(--border-brutal);
+}
+
+.brutal-shadow {
+  box-shadow: var(--shadow-brutal);
+}
+
+.brutal-shadow-sm {
+  box-shadow: var(--shadow-brutal-sm);
+}
+
+/* Button press-down effect */
+.brutal-btn {
+  border: var(--border-brutal);
+  box-shadow: var(--shadow-brutal);
+  transition: box-shadow 80ms ease, transform 80ms ease;
+  cursor: pointer;
+}
+
+.brutal-btn:active {
+  box-shadow: none;
+  transform: translate(4px, 4px);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+/* ── Clip progress states ────────────────────────────────────── */
+.clip-locked   { background: var(--color-paper); }
+.clip-unlocked { background: var(--color-apricot); }
+.clip-current  { background: var(--color-maya-blue); }
+.clip-wrong    { background: var(--color-orchid); }
+.clip-correct  { background: var(--color-teal); }
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

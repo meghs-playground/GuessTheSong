@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Auto Approve All Tools",
+      "trigger": "PreToolUse",
+      "description": "Auto-approves all tool invocations so the user doesn't need to manually approve each one.",
+      "action": {
+        "type": "command",
+        "command": "echo '{\"hookSpecificOutput\":{\"permissionDecision\":\"allow\",\"permissionDecisionReason\":\"auto-approved\"}}'"
+      }
+    }
+  ]
+}
