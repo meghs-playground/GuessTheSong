@@ -36,15 +36,32 @@ export function GameBoard() {
   const hasStarted = phase !== 'idle'
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-lg mx-auto px-4 py-8">
-      {/* Header */}
-      <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-black tracking-tight">Dhun 🎵</h1>
-        <div className="flex items-center gap-3">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 20,
+      width: '100%',
+      maxWidth: 520,
+      margin: '0 auto',
+      padding: '24px 16px 48px',
+    }}>
+
+      {/* ── Header ─────────────────────────────────────── */}
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1 }}>
+            Dhun
+          </h1>
+          <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 600, opacity: 0.6, letterSpacing: '0.05em' }}>
+            BOLLYWOOD HEARDLE
+          </p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <StreakSticker streak={stats.currentStreak} score={score} />
           <button
             onClick={() => setShowStats((v) => !v)}
-            className="brutal-btn bg-[var(--color-paper)] px-3 py-2 text-sm font-bold"
+            className="btn"
+            style={{ background: '#fff', padding: '8px 14px', fontSize: '0.8rem' }}
             aria-label="View stats"
             aria-expanded={showStats}
           >
@@ -53,61 +70,87 @@ export function GameBoard() {
         </div>
       </header>
 
-      {/* Stats panel */}
-      {showStats && (
-        <StatsPanel stats={stats} onClose={() => setShowStats(false)} />
-      )}
+      {/* ── Stats panel ────────────────────────────────── */}
+      {showStats && <StatsPanel stats={stats} onClose={() => setShowStats(false)} />}
 
-      {/* Era filter */}
-      <EraFilter selected={era} onChange={setEra} />
+      {/* ── Era filter ─────────────────────────────────── */}
+      <div className="card" style={{ padding: '14px 16px' }}>
+        <p style={{ margin: '0 0 10px', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          Filter by era
+        </p>
+        <EraFilter selected={era} onChange={setEra} />
+      </div>
 
-      {/* Start / idle state */}
+      {/* ── Idle / start screen ────────────────────────── */}
       {phase === 'idle' && (
-        <div className="flex flex-col items-center gap-6 py-8">
-          <p className="text-lg font-medium text-center">
-            Hear a tiny clip. Guess the Bollywood song.
-          </p>
+        <div className="card" style={{
+          padding: '40px 24px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 24,
+          textAlign: 'center',
+        }}>
+          <div>
+            <p style={{ margin: '0 0 6px', fontSize: '1.25rem', fontWeight: 800 }}>
+              🎵 Hear a tiny clip.
+            </p>
+            <p style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800 }}>
+              Guess the Bollywood song.
+            </p>
+            <p style={{ margin: '10px 0 0', fontSize: '0.875rem', opacity: 0.6 }}>
+              6 attempts · endless play
+            </p>
+          </div>
           <button
             onClick={startRound}
-            className="brutal-btn bg-[var(--color-maya-blue)] px-8 py-4 text-xl font-black"
+            className="btn"
+            style={{
+              background: '#6bbaec',
+              padding: '16px 48px',
+              fontSize: '1.25rem',
+              fontWeight: 900,
+              letterSpacing: '-0.02em',
+            }}
           >
-            Play
+            Play →
           </button>
         </div>
       )}
 
-      {/* Active round */}
+      {/* ── Active round ───────────────────────────────── */}
       {hasStarted && (
         <>
-          {/* Clip progress bar */}
+          {/* Clip progress */}
           <ClipProgress
             currentAttempt={currentAttempt}
             results={results}
             isCorrect={results.at(-1) === 'correct'}
           />
 
-          {/* Play / Stop controls */}
+          {/* Player */}
           {!isRevealed && (
-            <div className="flex items-center gap-4">
+            <div className="card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
               <PlayButton
                 isPlaying={isPlaying}
                 isLoading={isLoading}
                 onClick={isPlaying ? stopClip : playClip}
                 disabled={isLoading}
               />
-              <span className="text-sm font-medium text-gray-600" aria-live="polite">
-                {isLoading
-                  ? 'Loading song…'
-                  : isPlaying
-                  ? 'Playing…'
-                  : 'Press play to hear the clip'}
-              </span>
+              <div>
+                <p style={{ margin: 0, fontWeight: 700, fontSize: '0.9rem' }} aria-live="polite">
+                  {isLoading ? 'Loading song…' : isPlaying ? 'Playing clip…' : 'Press play'}
+                </p>
+                <p style={{ margin: '2px 0 0', fontSize: '0.75rem', opacity: 0.55 }}>
+                  {isLoading ? '' : `Attempt ${results.length + 1} of 6`}
+                </p>
+              </div>
             </div>
           )}
 
           {/* Previous guesses */}
           {guesses.length > 0 && (
-            <div className="flex flex-col gap-2" aria-label="Previous guesses" role="list">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }} role="list" aria-label="Previous guesses">
               {guesses.map((g, i) => {
                 const r = results[i]
                 if (r === 'correct') return null
@@ -122,28 +165,30 @@ export function GameBoard() {
             </div>
           )}
 
-          {/* Search + action buttons */}
+          {/* Search + skip/give up */}
           {!isRevealed && (
-            <div className="flex flex-col gap-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <SearchBox
                 results={searchResults}
                 onSearch={handleSearch}
                 onSelect={submitGuess}
-                disabled={isLoading || isRevealed}
+                disabled={isLoading}
                 placeholder="Search song, film or artist…"
               />
-              <div className="flex gap-3">
+              <div style={{ display: 'flex', gap: 10 }}>
                 <button
                   onClick={skip}
-                  disabled={isLoading || isRevealed}
-                  className="brutal-btn bg-[var(--color-paper)] flex-1 py-2 font-bold text-sm disabled:opacity-50"
+                  disabled={isLoading}
+                  className="btn"
+                  style={{ background: '#fff', flex: 1, padding: '10px 0', fontSize: '0.875rem' }}
                 >
                   Skip →
                 </button>
                 <button
                   onClick={giveUp}
-                  disabled={isLoading || isRevealed}
-                  className="brutal-btn bg-[var(--color-orchid)] flex-1 py-2 font-bold text-sm disabled:opacity-50"
+                  disabled={isLoading}
+                  className="btn"
+                  style={{ background: '#efbdeb', flex: 1, padding: '10px 0', fontSize: '0.875rem' }}
                 >
                   Give Up
                 </button>
@@ -151,7 +196,7 @@ export function GameBoard() {
             </div>
           )}
 
-          {/* Reveal card */}
+          {/* Reveal */}
           {isRevealed && reveal && (
             <RevealCard
               reveal={reveal}
@@ -162,9 +207,20 @@ export function GameBoard() {
             />
           )}
 
-          {/* Share feedback */}
+          {/* Share feedback toast */}
           {shareStatus !== 'idle' && (
-            <p className="text-center font-bold text-sm" role="status" aria-live="polite">
+            <p
+              style={{
+                textAlign: 'center',
+                fontWeight: 700,
+                fontSize: '0.875rem',
+                background: '#f9c784',
+                border: '3px solid #000',
+                padding: '8px 16px',
+              }}
+              role="status"
+              aria-live="polite"
+            >
               {shareStatus === 'shared' ? '✓ Shared!' : '✓ Copied to clipboard!'}
             </p>
           )}

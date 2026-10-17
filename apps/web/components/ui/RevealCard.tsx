@@ -9,50 +9,73 @@ interface RevealCardProps {
 }
 
 export function RevealCard({ reveal, guessedCorrectly, attemptsUsed, onNext, onShare }: RevealCardProps) {
+  const bg = guessedCorrectly ? '#5f7367' : '#efbdeb'
+  const textColor = guessedCorrectly ? '#fff' : '#000'
+
   return (
     <div
-      className={`w-full brutal-border brutal-shadow p-5 flex flex-col gap-4 ${
-        guessedCorrectly ? 'bg-[var(--color-teal)] text-white' : 'bg-[var(--color-orchid)] text-black'
-      }`}
+      style={{
+        width: '100%',
+        background: bg,
+        border: '3px solid #000',
+        boxShadow: '4px 4px 0 #000',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+      }}
       role="region"
       aria-label="Round result"
     >
       {/* Result label */}
-      <div className="flex items-center gap-2 font-bold text-lg">
-        <span aria-hidden="true">{guessedCorrectly ? '✓' : '✕'}</span>
-        <span>{guessedCorrectly ? `Guessed it! (attempt ${attemptsUsed})` : 'Better luck next time!'}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: textColor }}>
+        <span style={{ fontSize: '1.5rem', fontWeight: 900 }} aria-hidden="true">
+          {guessedCorrectly ? '✓' : '✕'}
+        </span>
+        <span style={{ fontSize: '1.1rem', fontWeight: 800 }}>
+          {guessedCorrectly ? `Guessed in ${attemptsUsed}!` : 'Not this time!'}
+        </span>
       </div>
 
       {/* Song info */}
-      <div className="flex flex-col gap-1">
-        <p className="text-2xl font-bold leading-tight">{reveal.canonicalTitle}</p>
-        <p className="text-base font-medium opacity-90">{reveal.film} · {reveal.year}</p>
-        <p className="text-sm opacity-80">{reveal.artists.join(', ')}</p>
-        <p className="text-sm opacity-70">Music: {reveal.composer}</p>
+      <div style={{ color: textColor, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900, lineHeight: 1.2 }}>
+          {reveal.canonicalTitle}
+        </p>
+        <p style={{ margin: 0, fontSize: '1rem', fontWeight: 600, opacity: 0.85 }}>
+          {reveal.film} &middot; {reveal.year}
+        </p>
+        <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.75 }}>
+          {reveal.artists.join(', ')}
+        </p>
+        <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.65 }}>
+          Music: {reveal.composer}
+        </p>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3 flex-wrap">
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         <a
           href={reveal.streamingLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="brutal-btn bg-[var(--color-paper)] text-ink px-4 py-2 font-bold text-sm inline-flex items-center gap-2"
+          className="btn"
+          style={{ background: '#fff', color: '#000', padding: '10px 16px', fontSize: '0.875rem', textDecoration: 'none' }}
           aria-label={`Listen to ${reveal.canonicalTitle} on Apple Music`}
         >
-          <span aria-hidden="true">♫</span> Listen
+          ♫ Listen
         </a>
         <button
           onClick={onShare}
-          className="brutal-btn bg-[var(--color-apricot)] text-ink px-4 py-2 font-bold text-sm"
-          aria-label="Share your result"
+          className="btn"
+          style={{ background: '#f9c784', color: '#000', padding: '10px 16px', fontSize: '0.875rem' }}
         >
           Share
         </button>
         <button
           onClick={onNext}
-          className="brutal-btn bg-[var(--color-maya-blue)] text-ink px-4 py-2 font-bold text-sm"
-          aria-label="Play next song"
+          className="btn"
+          style={{ background: '#6bbaec', color: '#000', padding: '10px 16px', fontSize: '0.875rem' }}
         >
           Next Song →
         </button>

@@ -22,7 +22,6 @@ export function SearchBox({
   const [open, setOpen] = useState(false)
   const [activeIdx, setActiveIdx] = useState(-1)
   const listboxId = useId()
-  const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -36,7 +35,6 @@ export function SearchBox({
     }
   }, [query, onSearch])
 
-  // Close on outside click
   useEffect(() => {
     function handle(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -71,23 +69,30 @@ export function SearchBox({
   }
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
       <input
-        ref={inputRef}
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         onFocus={() => query.trim().length >= 2 && results.length > 0 && setOpen(true)}
         disabled={disabled}
-        className="w-full bg-[var(--color-paper)] brutal-border brutal-shadow px-4 py-3 text-base font-medium placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{
+          width: '100%',
+          background: '#fff',
+          border: '3px solid #000',
+          boxShadow: '4px 4px 0 #000',
+          padding: '12px 16px',
+          fontSize: '1rem',
+          fontWeight: 500,
+          fontFamily: 'inherit',
+          outline: 'none',
+        }}
         placeholder={placeholder}
         aria-label="Search for a song"
         aria-autocomplete="list"
         aria-controls={open ? listboxId : undefined}
-        aria-activedescendant={
-          open && activeIdx >= 0 ? `suggestion-${activeIdx}` : undefined
-        }
+        aria-activedescendant={open && activeIdx >= 0 ? `suggestion-${activeIdx}` : undefined}
         role="combobox"
         aria-expanded={open}
         autoComplete="off"
@@ -98,7 +103,21 @@ export function SearchBox({
           id={listboxId}
           role="listbox"
           aria-label="Song suggestions"
-          className="absolute z-50 top-full left-0 right-0 brutal-border border-t-0 bg-[var(--color-paper)] max-h-60 overflow-y-auto"
+          style={{
+            position: 'absolute',
+            zIndex: 50,
+            top: '100%',
+            left: 0,
+            right: 0,
+            background: '#fff',
+            border: '3px solid #000',
+            borderTop: 'none',
+            maxHeight: 240,
+            overflowY: 'auto',
+            listStyle: 'none',
+            margin: 0,
+            padding: 0,
+          }}
         >
           {results.map((result, idx) => (
             <li
@@ -111,11 +130,14 @@ export function SearchBox({
                 handleSelect(result)
               }}
               onMouseEnter={() => setActiveIdx(idx)}
-              className={`
-                px-4 py-3 cursor-pointer border-b border-black last:border-b-0
-                text-sm font-medium
-                ${idx === activeIdx ? 'bg-[var(--color-maya-blue)]' : 'hover:bg-[var(--color-frosted-blue)]'}
-              `}
+              style={{
+                padding: '12px 16px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                borderBottom: idx < results.length - 1 ? '1px solid #000' : 'none',
+                background: idx === activeIdx ? '#6bbaec' : '#fff',
+              }}
             >
               {result.display}
             </li>

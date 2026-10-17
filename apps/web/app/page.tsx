@@ -2,7 +2,7 @@ import { GameBoard } from '@/components/game/GameBoard'
 
 export default function HomePage() {
   return (
-    <main className="min-h-dvh bg-[var(--color-frosted-blue)]">
+    <main style={{ minHeight: '100dvh', background: '#a7e2e3' }}>
       <GameBoard />
     </main>
   )
