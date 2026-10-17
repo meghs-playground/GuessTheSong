@@ -24,6 +24,10 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'Dhun',
   },
+  icons: {
+    icon: '/icon-512.svg',
+    apple: '/icon-192.svg',
+  },
   openGraph: {
     title: 'Dhun – Bollywood Heardle',
     description: 'Hear a tiny clip. Guess the Bollywood song. Play endlessly.',
