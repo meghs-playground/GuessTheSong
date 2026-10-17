@@ -110,13 +110,15 @@ function normalizeTitle(t: string): string {
     .trim()
 }
 
-/** Remove common remix/reprise/karaoke suffixes */
+/** Remove common remix/reprise/karaoke/phonk/edit suffixes */
 function isClean(title: string): boolean {
   const lower = title.toLowerCase()
   const blocklist = [
     'remix', 'reprise', 'karaoke', 'instrumental', 'lo-fi', 'lofi',
     'slowed', 'reverb', 'cover', 'tribute', 'recreat', 'remastered',
-    'from the film', '(version)', 'version)', 'unplugged',
+    'from the film', '(version)', 'version)', 'unplugged', 'acoustic',
+    'phonk', 'edit)', '- edit', 'mashup', 'medley', 'sped up',
+    'nightcore', 'drill', 'trap mix', 'chillout',
   ]
   return !blocklist.some((b) => lower.includes(b))
 }

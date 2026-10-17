@@ -34,5 +34,5 @@ audioRouter.get('/:token', async (c) => {
   const song = await getSongById(sql, payload.songId)
   if (!song) return c.json({ error: 'Song not found' }, 404)
 
-  return c.json({ url: song.preview_url })
+  return c.json({ url: song.preview_url, songId: song.id })
 })

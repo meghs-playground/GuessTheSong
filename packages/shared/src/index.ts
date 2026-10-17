@@ -25,7 +25,7 @@ export interface SongAlias {
 
 // ── Round / game state ────────────────────────────────────────────────────────
 
-export const CLIP_DURATIONS = [0.1, 0.5, 1, 2, 4, 8] as const
+export const CLIP_DURATIONS = [0.2, 0.5, 1, 2, 4, 8] as const
 export type ClipIndex = 0 | 1 | 2 | 3 | 4 | 5
 export const MAX_ATTEMPTS = CLIP_DURATIONS.length
 

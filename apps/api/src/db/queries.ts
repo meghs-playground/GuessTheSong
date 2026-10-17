@@ -30,26 +30,47 @@ export interface AliasRow {
  * Uses a fast ORDER BY RANDOM() LIMIT 1 — fine at 5k-20k rows.
  * For larger catalogues, precompute ID lists per era in Redis.
  */
-export async function getRandomSong(sql: Sql, era?: Era): Promise<SongRow | null> {
+export async function getRandomSong(sql: Sql, era?: Era, excludeIds: string[] = []): Promise<SongRow | null> {
+  // Build exclude clause — only applies if we have IDs to exclude
+  // If excluding would leave no results, fall back to ignoring excludes
   const result = era
-    ? await sql`
-        SELECT id, canonical_title, film, year, era, artists, composer,
-               source_platform, track_id, preview_url, difficulty, popularity_score
-        FROM songs
-        WHERE active = true AND era = ${era}
-        ORDER BY RANDOM()
-        LIMIT 1
-      `
-    : await sql`
-        SELECT id, canonical_title, film, year, era, artists, composer,
-               source_platform, track_id, preview_url, difficulty, popularity_score
-        FROM songs
-        WHERE active = true
-        ORDER BY RANDOM()
-        LIMIT 1
-      `
+    ? excludeIds.length > 0
+      ? await sql`
+          SELECT id, canonical_title, film, year, era, artists, composer,
+                 source_platform, track_id, preview_url, difficulty, popularity_score
+          FROM songs
+          WHERE active = true AND era = ${era} AND id != ALL(${excludeIds}::text[])
+          ORDER BY RANDOM() LIMIT 1
+        `
+      : await sql`
+          SELECT id, canonical_title, film, year, era, artists, composer,
+                 source_platform, track_id, preview_url, difficulty, popularity_score
+          FROM songs
+          WHERE active = true AND era = ${era}
+          ORDER BY RANDOM() LIMIT 1
+        `
+    : excludeIds.length > 0
+      ? await sql`
+          SELECT id, canonical_title, film, year, era, artists, composer,
+                 source_platform, track_id, preview_url, difficulty, popularity_score
+          FROM songs
+          WHERE active = true AND id != ALL(${excludeIds}::text[])
+          ORDER BY RANDOM() LIMIT 1
+        `
+      : await sql`
+          SELECT id, canonical_title, film, year, era, artists, composer,
+                 source_platform, track_id, preview_url, difficulty, popularity_score
+          FROM songs
+          WHERE active = true
+          ORDER BY RANDOM() LIMIT 1
+        `
 
-  return rows<SongRow>(result)[0] ?? null
+  // If exclude filtered out everything, retry without exclusions
+  const found = rows<SongRow>(result)[0]
+  if (!found && excludeIds.length > 0) {
+    return getRandomSong(sql, era)
+  }
+  return found ?? null
 }
 
 /** Fetch all normalized aliases for a song */

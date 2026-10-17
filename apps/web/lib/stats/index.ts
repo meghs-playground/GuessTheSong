@@ -45,7 +45,7 @@ export function roundScore(attemptsUsed: number, guessedCorrectly: boolean): num
   return Math.max(MAX_ATTEMPTS - attemptsUsed + 1, 1)
 }
 
-function defaultStats(): SessionStats {
+export function defaultStats(): SessionStats {
   return {
     roundsPlayed: 0,
     roundsGuessed: 0,
