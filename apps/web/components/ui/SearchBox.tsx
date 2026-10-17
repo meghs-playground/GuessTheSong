@@ -20,7 +20,7 @@ export function SearchBox({
 }: SearchBoxProps) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
-  const [activeIdx, setActiveIdx] = useState(-1)
+  const [activeIdx, setActiveIdx] = useState(0)
   const listboxId = useId()
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -29,9 +29,10 @@ export function SearchBox({
     if (trimmed.length >= 2) {
       onSearch(trimmed)
       setOpen(true)
-      setActiveIdx(-1)
+      setActiveIdx(0)
     } else {
       setOpen(false)
+      setActiveIdx(-1)
     }
   }, [query, onSearch])
 
@@ -46,27 +47,39 @@ export function SearchBox({
   }, [])
 
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (!open || results.length === 0) return
+    if (!open) return
+
     if (e.key === 'ArrowDown') {
       e.preventDefault()
-      setActiveIdx((i) => Math.min(i + 1, results.length - 1))
+      if (results.length > 0) {
+        setActiveIdx((i) => Math.min(i + 1, results.length - 1))
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
-      setActiveIdx((i) => Math.max(i - 1, 0))
-    } else if (e.key === 'Enter' && activeIdx >= 0) {
+      if (results.length > 0) {
+        setActiveIdx((i) => Math.max(i - 1, 0))
+      }
+    } else if (e.key === 'Enter') {
       e.preventDefault()
-      const selected = results[activeIdx]
-      if (selected) handleSelect(selected)
+      if (results.length > 0) {
+        const targetIdx = activeIdx >= 0 && activeIdx < results.length ? activeIdx : 0
+        const selected = results[targetIdx]
+        if (selected) handleSelect(selected)
+      }
     } else if (e.key === 'Escape') {
       setOpen(false)
     }
   }
 
   function handleSelect(result: SearchResult) {
-    setQuery(result.canonicalTitle)
+    setQuery('')
     setOpen(false)
+    setActiveIdx(-1)
     onSelect(result)
   }
+
+  const trimmedQuery = query.trim()
+  const showDropdown = open && trimmedQuery.length >= 2
 
   return (
     <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
@@ -75,7 +88,7 @@ export function SearchBox({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
-        onFocus={() => query.trim().length >= 2 && results.length > 0 && setOpen(true)}
+        onFocus={() => trimmedQuery.length >= 2 && setOpen(true)}
         disabled={disabled}
         style={{
           width: '100%',
@@ -91,14 +104,18 @@ export function SearchBox({
         placeholder={placeholder}
         aria-label="Search for a song"
         aria-autocomplete="list"
-        aria-controls={open ? listboxId : undefined}
-        aria-activedescendant={open && activeIdx >= 0 ? `suggestion-${activeIdx}` : undefined}
+        aria-controls={showDropdown ? listboxId : undefined}
+        aria-activedescendant={
+          showDropdown && results.length > 0 && activeIdx >= 0
+            ? `suggestion-${activeIdx}`
+            : undefined
+        }
         role="combobox"
-        aria-expanded={open}
+        aria-expanded={showDropdown}
         autoComplete="off"
         spellCheck={false}
       />
-      {open && results.length > 0 && (
+      {showDropdown && (
         <ul
           id={listboxId}
           role="listbox"
@@ -112,36 +129,53 @@ export function SearchBox({
             background: '#fff',
             border: '3px solid #000',
             borderTop: 'none',
-            maxHeight: 240,
+            maxHeight: 260,
             overflowY: 'auto',
             listStyle: 'none',
             margin: 0,
             padding: 0,
+            boxShadow: '4px 4px 0 rgba(0,0,0,0.2)',
           }}
         >
-          {results.map((result, idx) => (
+          {results.length > 0 ? (
+            results.map((result, idx) => (
+              <li
+                key={result.songId}
+                id={`suggestion-${idx}`}
+                role="option"
+                aria-selected={idx === activeIdx}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  handleSelect(result)
+                }}
+                onMouseEnter={() => setActiveIdx(idx)}
+                style={{
+                  padding: '12px 16px',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  borderBottom: idx < results.length - 1 ? '1px solid #eee' : 'none',
+                  background: idx === activeIdx ? '#6bbaec' : '#fff',
+                  color: '#000',
+                  transition: 'background 0.1s ease',
+                }}
+              >
+                {result.display}
+              </li>
+            ))
+          ) : (
             <li
-              key={result.songId}
-              id={`suggestion-${idx}`}
-              role="option"
-              aria-selected={idx === activeIdx}
-              onMouseDown={(e) => {
-                e.preventDefault()
-                handleSelect(result)
-              }}
-              onMouseEnter={() => setActiveIdx(idx)}
               style={{
-                padding: '12px 16px',
-                cursor: 'pointer',
+                padding: '14px 16px',
                 fontSize: '0.875rem',
-                fontWeight: 500,
-                borderBottom: idx < results.length - 1 ? '1px solid #000' : 'none',
-                background: idx === activeIdx ? '#6bbaec' : '#fff',
+                color: '#666',
+                fontStyle: 'italic',
+                background: '#fafafa',
               }}
             >
-              {result.display}
+              No matching songs found
             </li>
-          ))}
+          )}
         </ul>
       )}
     </div>

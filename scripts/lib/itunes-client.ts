@@ -249,7 +249,7 @@ class SharedRateLimiter {
   }
 }
 
-const globalRateLimiter = new SharedRateLimiter(800)
+const globalRateLimiter = new SharedRateLimiter(3200)
 
 // ── iTunes Search API (via Curl Transport) ───────────────────────────────────
 
@@ -273,25 +273,45 @@ export async function searchItunesDetailed(term: string, limit = 5): Promise<Sea
     try {
       await globalRateLimiter.acquire()
 
-      const { stdout } = await execFileAsync('curl', ['-s', '--max-time', '8', url.toString()])
+      const { stdout } = await execFileAsync('curl', [
+        '-s',
+        '--max-time',
+        '8',
+        '-w',
+        '\n%{http_code}',
+        url.toString(),
+      ])
 
-      if (!stdout || stdout.trim().length === 0) {
-        return { results: [], rateLimited: false }
-      }
+      const lastNewline = stdout.lastIndexOf('\n')
+      const body = lastNewline >= 0 ? stdout.slice(0, lastNewline).trim() : stdout.trim()
+      const httpCode =
+        lastNewline >= 0 ? parseInt(stdout.slice(lastNewline + 1).trim(), 10) : 200
 
-      if (stdout.includes('Rate limit has been exceeded')) {
+      if (httpCode === 429 || httpCode === 403 || body.includes('Rate limit')) {
         hitRateLimit = true
-        const wait = 10000 + Math.random() * 5000
-        console.warn(`\n  [iTunes 429] Rate limit hit on "${term}". Pausing ${Math.round(wait / 1000)}s…`)
+        const wait = 15000 + Math.random() * 5000
+        console.warn(
+          `\n  [iTunes ${httpCode}] Rate limit hit on "${term}". Pausing ${Math.round(wait / 1000)}s…`,
+        )
         globalRateLimiter.pause(wait)
         await sleep(wait)
         continue
       }
 
-      const data = JSON.parse(stdout) as { results?: ItunesTrack[] }
-      return { results: data.results ?? [], rateLimited: false }
+      if (httpCode !== 200 || !body) {
+        continue
+      }
+
+      try {
+        const data = JSON.parse(body) as { resultCount?: number; results?: ItunesTrack[] }
+        return { results: data.results ?? [], rateLimited: false }
+      } catch {
+        hitRateLimit = true
+        continue
+      }
     } catch {
-      if (attempt < MAX_RETRIES - 1) await sleep(1000)
+      hitRateLimit = true
+      if (attempt < MAX_RETRIES - 1) await sleep(1500)
     }
   }
 
