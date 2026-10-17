@@ -22,12 +22,13 @@ app.use(
   '*',
   cors({
     origin: (origin) => {
-      // Allow dhun.app and localhost in dev
       if (!origin) return null
       if (
         origin === 'https://dhun.app' ||
         origin === 'https://www.dhun.app' ||
-        origin.startsWith('http://localhost')
+        origin.endsWith('.vercel.app') ||
+        origin.startsWith('http://localhost') ||
+        origin.startsWith('http://127.0.0.1')
       ) {
         return origin
       }
