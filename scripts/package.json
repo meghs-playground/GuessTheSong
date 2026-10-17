@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "seed": "tsx seed-library.ts",
-    "seed-from-playlists": "tsx seed-from-playlists.ts",
     "export-catalogue": "tsx export-catalogue.ts"
   },
   "dependencies": {
