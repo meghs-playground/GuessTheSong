@@ -36,23 +36,40 @@ export function GameBoard() {
   const hasStarted = phase !== 'idle'
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 20,
-      width: '100%',
-      maxWidth: 520,
-      margin: '0 auto',
-      padding: '24px 16px 48px',
-    }}>
-
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 20,
+        width: '100%',
+        maxWidth: 520,
+        margin: '0 auto',
+        padding: '24px 16px 48px',
+      }}
+    >
       {/* ── Header ─────────────────────────────────────── */}
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1 }}>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: '2rem',
+              fontWeight: 900,
+              letterSpacing: '-0.03em',
+              lineHeight: 1,
+            }}
+          >
             Dhun
           </h1>
-          <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 600, opacity: 0.6, letterSpacing: '0.05em' }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              opacity: 0.6,
+              letterSpacing: '0.05em',
+            }}
+          >
             BOLLYWOOD HEARDLE
           </p>
         </div>
@@ -75,7 +92,15 @@ export function GameBoard() {
 
       {/* ── Era filter ─────────────────────────────────── */}
       <div className="card" style={{ padding: '14px 16px' }}>
-        <p style={{ margin: '0 0 10px', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        <p
+          style={{
+            margin: '0 0 10px',
+            fontSize: '0.7rem',
+            fontWeight: 800,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+          }}
+        >
           Filter by era
         </p>
         <EraFilter selected={era} onChange={setEra} />
@@ -83,14 +108,17 @@ export function GameBoard() {
 
       {/* ── Idle / start screen ────────────────────────── */}
       {phase === 'idle' && (
-        <div className="card" style={{
-          padding: '40px 24px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 24,
-          textAlign: 'center',
-        }}>
+        <div
+          className="card"
+          style={{
+            padding: '40px 24px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 24,
+            textAlign: 'center',
+          }}
+        >
           <div>
             <p style={{ margin: '0 0 6px', fontSize: '1.25rem', fontWeight: 800 }}>
               🎵 Hear a tiny clip.
@@ -130,7 +158,10 @@ export function GameBoard() {
 
           {/* Player */}
           {!isRevealed && (
-            <div className="card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div
+              className="card"
+              style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16 }}
+            >
               <PlayButton
                 isPlaying={isPlaying}
                 isLoading={isLoading}
@@ -150,16 +181,16 @@ export function GameBoard() {
 
           {/* Previous guesses */}
           {guesses.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }} role="list" aria-label="Previous guesses">
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+              role="list"
+              aria-label="Previous guesses"
+            >
               {guesses.map((g, i) => {
                 const r = results[i]
                 if (r === 'correct') return null
                 return (
-                  <GuessChip
-                    key={i}
-                    title={g || ''}
-                    type={r === 'skipped' ? 'skipped' : 'wrong'}
-                  />
+                  <GuessChip key={i} title={g || ''} type={r === 'skipped' ? 'skipped' : 'wrong'} />
                 )
               })}
             </div>
@@ -188,7 +219,12 @@ export function GameBoard() {
                   onClick={giveUp}
                   disabled={isLoading}
                   className="btn"
-                  style={{ background: '#efbdeb', flex: 1, padding: '10px 0', fontSize: '0.875rem' }}
+                  style={{
+                    background: '#efbdeb',
+                    flex: 1,
+                    padding: '10px 0',
+                    fontSize: '0.875rem',
+                  }}
                 >
                   Give Up
                 </button>

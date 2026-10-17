@@ -114,19 +114,38 @@ function normalizeTitle(t: string): string {
 function isClean(title: string): boolean {
   const lower = title.toLowerCase()
   const blocklist = [
-    'remix', 'reprise', 'karaoke', 'instrumental', 'lo-fi', 'lofi',
-    'slowed', 'reverb', 'cover', 'tribute', 'recreat', 'remastered',
-    'from the film', '(version)', 'version)', 'unplugged', 'acoustic',
-    'phonk', 'edit)', '- edit', 'mashup', 'medley', 'sped up',
-    'nightcore', 'drill', 'trap mix', 'chillout',
+    'remix',
+    'reprise',
+    'karaoke',
+    'instrumental',
+    'lo-fi',
+    'lofi',
+    'slowed',
+    'reverb',
+    'cover',
+    'tribute',
+    'recreat',
+    'remastered',
+    'from the film',
+    '(version)',
+    'version)',
+    'unplugged',
+    'acoustic',
+    'phonk',
+    'edit)',
+    '- edit',
+    'mashup',
+    'medley',
+    'sped up',
+    'nightcore',
+    'drill',
+    'trap mix',
+    'chillout',
   ]
   return !blocklist.some((b) => lower.includes(b))
 }
 
-async function fetchItunesTracks(
-  term: string,
-  retries = MAX_RETRIES,
-): Promise<ItunesTrack[]> {
+async function fetchItunesTracks(term: string, retries = MAX_RETRIES): Promise<ItunesTrack[]> {
   const url = new URL('https://itunes.apple.com/search')
   url.searchParams.set('term', term)
   url.searchParams.set('media', 'music')
@@ -148,7 +167,7 @@ async function fetchItunesTracks(
         console.warn(`  HTTP ${res.status} for "${term}"`)
         return []
       }
-      const data = await res.json() as ItunesResponse
+      const data = (await res.json()) as ItunesResponse
       return data.results ?? []
     } catch (err) {
       console.warn(`  Fetch error for "${term}":`, err)

@@ -20,9 +20,7 @@ export function buildShareText(
 ): string {
   const grid = results.map((r) => EMOJI[r]).join('')
   const blanks = '⬜'.repeat(MAX_ATTEMPTS - results.length)
-  const attemptStr = guessedCorrectly
-    ? `${results.length}/${MAX_ATTEMPTS}`
-    : 'X/' + MAX_ATTEMPTS
+  const attemptStr = guessedCorrectly ? `${results.length}/${MAX_ATTEMPTS}` : 'X/' + MAX_ATTEMPTS
 
   const lines = [
     `🎵 Dhun – Bollywood Heardle`,

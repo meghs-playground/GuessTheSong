@@ -10,6 +10,8 @@
     "dev:api": "pnpm --filter api dev",
     "build:web": "pnpm --filter web build",
     "build:api": "pnpm --filter api build",
+    "seed:playlists": "pnpm --filter scripts seed:playlists",
+    "export-catalogue": "pnpm --filter scripts export-catalogue",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "format": "prettier --write ."

@@ -3,9 +3,9 @@ import type { SearchResult } from '@dhun/shared'
 /** Raw catalogue entry stored in the compressed static JSON */
 export interface CatalogueEntry {
   id: string
-  t: string   // canonical title
-  f: string   // film
-  y: number   // year
+  t: string // canonical title
+  f: string // film
+  y: number // year
   a: string[] // artists
   al: string[] // aliases (normalized)
 }
@@ -18,7 +18,7 @@ export async function loadCatalogue(): Promise<void> {
   if (loaded) return
   const res = await fetch('/catalogue.json')
   if (!res.ok) throw new Error('Failed to load catalogue')
-  catalogue = await res.json() as CatalogueEntry[]
+  catalogue = (await res.json()) as CatalogueEntry[]
   loaded = true
 }
 

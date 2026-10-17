@@ -8,7 +8,13 @@ interface RevealCardProps {
   onShare: () => void
 }
 
-export function RevealCard({ reveal, guessedCorrectly, attemptsUsed, onNext, onShare }: RevealCardProps) {
+export function RevealCard({
+  reveal,
+  guessedCorrectly,
+  attemptsUsed,
+  onNext,
+  onShare,
+}: RevealCardProps) {
   const bg = guessedCorrectly ? '#5f7367' : '#efbdeb'
   const textColor = guessedCorrectly ? '#fff' : '#000'
 
@@ -48,9 +54,7 @@ export function RevealCard({ reveal, guessedCorrectly, attemptsUsed, onNext, onS
         <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.75 }}>
           {reveal.artists.join(', ')}
         </p>
-        <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.65 }}>
-          Music: {reveal.composer}
-        </p>
+        <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.65 }}>Music: {reveal.composer}</p>
       </div>
 
       {/* Actions */}
@@ -60,7 +64,13 @@ export function RevealCard({ reveal, guessedCorrectly, attemptsUsed, onNext, onS
           target="_blank"
           rel="noopener noreferrer"
           className="btn"
-          style={{ background: '#fff', color: '#000', padding: '10px 16px', fontSize: '0.875rem', textDecoration: 'none' }}
+          style={{
+            background: '#fff',
+            color: '#000',
+            padding: '10px 16px',
+            fontSize: '0.875rem',
+            textDecoration: 'none',
+          }}
           aria-label={`Listen to ${reveal.canonicalTitle} on Apple Music`}
         >
           ♫ Listen
@@ -68,14 +78,24 @@ export function RevealCard({ reveal, guessedCorrectly, attemptsUsed, onNext, onS
         <button
           onClick={onShare}
           className="btn"
-          style={{ background: '#f9c784', color: '#000', padding: '10px 16px', fontSize: '0.875rem' }}
+          style={{
+            background: '#f9c784',
+            color: '#000',
+            padding: '10px 16px',
+            fontSize: '0.875rem',
+          }}
         >
           Share
         </button>
         <button
           onClick={onNext}
           className="btn"
-          style={{ background: '#6bbaec', color: '#000', padding: '10px 16px', fontSize: '0.875rem' }}
+          style={{
+            background: '#6bbaec',
+            color: '#000',
+            padding: '10px 16px',
+            fontSize: '0.875rem',
+          }}
         >
           Next Song →
         </button>

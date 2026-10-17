@@ -1,7 +1,14 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { ClipIndex, Era, GuessResult, RoundResult, SearchResult, SongReveal } from '@dhun/shared'
+import type {
+  ClipIndex,
+  Era,
+  GuessResult,
+  RoundResult,
+  SearchResult,
+  SongReveal,
+} from '@dhun/shared'
 import { CLIP_DURATIONS, MAX_ATTEMPTS } from '@dhun/shared'
 import { AudioEngine } from '@/lib/audio/engine'
 import { apiClient } from '@/lib/api/client'
@@ -9,6 +16,7 @@ import { search, loadCatalogue } from '@/lib/search/index'
 import { loadStats, saveStats, applyRoundResult, roundScore, defaultStats } from '@/lib/stats/index'
 import { buildShareText, shareResult } from '@/lib/stats/share'
 import { getSeenIds, markSeen } from '@/lib/stats/seen'
+import { initAnalytics, trackGameStart, trackGuess, trackGameFinish } from '@/lib/analytics/tracker'
 
 type Phase = 'idle' | 'loading' | 'playing' | 'between-clips' | 'revealed'
 
@@ -58,6 +66,8 @@ export function useGame(era: Era | null) {
 
   useEffect(() => {
     loadCatalogue().catch(console.error)
+    const cleanup = initAnalytics()
+    return cleanup
   }, [])
 
   // When era changes mid-game, immediately start a new round
@@ -127,6 +137,7 @@ export function useGame(era: Era | null) {
       }
 
       markSeen(songId)
+      trackGameStart(era)
 
       setState((s) => ({
         ...initialRoundState,
@@ -164,11 +175,7 @@ export function useGame(era: Era | null) {
   }, [])
 
   const finishRound = useCallback(
-    (
-      newResults: GuessResult[],
-      newGuesses: string[],
-      reveal: SongReveal,
-    ) => {
+    (newResults: GuessResult[], newGuesses: string[], reveal: SongReveal) => {
       const guessedCorrectly = newResults.at(-1) === 'correct'
       const attemptsUsed = newResults.length
       const score = roundScore(attemptsUsed, guessedCorrectly)
@@ -183,6 +190,8 @@ export function useGame(era: Era | null) {
       const newStats = applyRoundResult(stats, roundResult)
       saveStats(newStats)
       setStats(newStats)
+
+      trackGameFinish(guessedCorrectly, attemptsUsed, score, eraRef.current, reveal.canonicalTitle)
 
       setState((s) => ({
         ...s,
@@ -207,6 +216,8 @@ export function useGame(era: Era | null) {
           roundToken: state.roundToken,
           guess: selected.canonicalTitle,
         })
+
+        trackGuess(state.currentAttempt + 1, resp.result, selected.canonicalTitle)
 
         const newResults: GuessResult[] = [...state.results, resp.result]
         const newGuesses = [...state.guesses, selected.canonicalTitle]
@@ -235,6 +246,8 @@ export function useGame(era: Era | null) {
   const skip = useCallback(async () => {
     if (!state.roundToken || state.phase === 'revealed') return
     engineRef.current?.stop()
+
+    trackGuess(state.currentAttempt + 1, 'skipped')
 
     const newResults: GuessResult[] = [...state.results, 'skipped']
     const newGuesses = [...state.guesses, '']
@@ -291,5 +304,17 @@ export function useGame(era: Era | null) {
     }
   }, [])
 
-  return { state, stats, searchResults, startRound, playClip, stopClip, handleSearch, submitGuess, skip, giveUp, share }
+  return {
+    state,
+    stats,
+    searchResults,
+    startRound,
+    playClip,
+    stopClip,
+    handleSearch,
+    submitGuess,
+    skip,
+    giveUp,
+    share,
+  }
 }

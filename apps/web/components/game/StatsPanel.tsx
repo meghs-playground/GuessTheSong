@@ -9,14 +9,10 @@ interface StatsPanelProps {
 
 export function StatsPanel({ stats, onClose }: StatsPanelProps) {
   const avgAttempts =
-    stats.roundsGuessed > 0
-      ? (stats.totalAttempts / stats.roundsGuessed).toFixed(1)
-      : '–'
+    stats.roundsGuessed > 0 ? (stats.totalAttempts / stats.roundsGuessed).toFixed(1) : '–'
 
   const guessRate =
-    stats.roundsPlayed > 0
-      ? Math.round((stats.roundsGuessed / stats.roundsPlayed) * 100)
-      : 0
+    stats.roundsPlayed > 0 ? Math.round((stats.roundsGuessed / stats.roundsPlayed) * 100) : 0
 
   const maxDist = Math.max(...stats.attemptDistribution, 1)
 
@@ -34,7 +30,13 @@ export function StatsPanel({ stats, onClose }: StatsPanelProps) {
         <button
           onClick={onClose}
           className="btn"
-          style={{ background: '#efbdeb', width: 36, height: 36, fontSize: '1rem', fontWeight: 900 }}
+          style={{
+            background: '#efbdeb',
+            width: 36,
+            height: 36,
+            fontSize: '1rem',
+            fontWeight: 900,
+          }}
           aria-label="Close stats"
         >
           ✕
@@ -63,20 +65,57 @@ export function StatsPanel({ stats, onClose }: StatsPanelProps) {
             }}
           >
             <span style={{ fontSize: '1.6rem', fontWeight: 900, lineHeight: 1 }}>{value}</span>
-            <span style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', opacity: 0.6 }}>{label}</span>
+            <span
+              style={{
+                fontSize: '0.65rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                opacity: 0.6,
+              }}
+            >
+              {label}
+            </span>
           </div>
         ))}
       </div>
 
       {/* Attempt distribution */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <p style={{ margin: 0, fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+        <p
+          style={{
+            margin: 0,
+            fontSize: '0.7rem',
+            fontWeight: 800,
+            textTransform: 'uppercase',
+            letterSpacing: '0.07em',
+          }}
+        >
           Guess distribution
         </p>
         {stats.attemptDistribution.map((count, idx) => (
           <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 16, fontWeight: 800, fontSize: '0.8rem', textAlign: 'center', flexShrink: 0 }}>{idx + 1}</span>
-            <div style={{ flex: 1, height: 24, background: '#f0f0f0', border: '2px solid #000', position: 'relative', overflow: 'hidden' }}>
+            <span
+              style={{
+                width: 16,
+                fontWeight: 800,
+                fontSize: '0.8rem',
+                textAlign: 'center',
+                flexShrink: 0,
+              }}
+            >
+              {idx + 1}
+            </span>
+            <div
+              style={{
+                flex: 1,
+                height: 24,
+                background: '#f0f0f0',
+                border: '2px solid #000',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
               {count > 0 && (
                 <div
                   style={{
@@ -101,7 +140,15 @@ export function StatsPanel({ stats, onClose }: StatsPanelProps) {
         ))}
       </div>
 
-      <p style={{ margin: 0, fontSize: '0.75rem', textAlign: 'center', opacity: 0.5, fontWeight: 600 }}>
+      <p
+        style={{
+          margin: 0,
+          fontSize: '0.75rem',
+          textAlign: 'center',
+          opacity: 0.5,
+          fontWeight: 600,
+        }}
+      >
         Avg attempts when correct: {avgAttempts}
       </p>
     </div>

@@ -26,19 +26,19 @@ function getStepState(
 }
 
 const STATE_CLASS: Record<StepState, string> = {
-  locked:   'step-locked',
-  current:  'step-current',
+  locked: 'step-locked',
+  current: 'step-current',
   unlocked: 'step-unlocked',
-  wrong:    'step-wrong',
-  correct:  'step-correct',
+  wrong: 'step-wrong',
+  correct: 'step-correct',
 }
 
 const STATE_LABEL: Record<StepState, string> = {
-  locked:   'locked',
-  current:  'current',
+  locked: 'locked',
+  current: 'current',
   unlocked: 'unlocked',
-  wrong:    'wrong',
-  correct:  'correct',
+  wrong: 'wrong',
+  correct: 'correct',
 }
 
 export function ClipProgress({ currentAttempt, results, isCorrect }: ClipProgressProps) {

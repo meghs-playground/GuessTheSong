@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   # Or on a schedule — weekly Sunday midnight IST
   schedule:
-    - cron: '30 18 * * 0'  # 18:30 UTC = midnight IST
+    - cron: '30 18 * * 0' # 18:30 UTC = midnight IST
 
 jobs:
   update:

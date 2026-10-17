@@ -22,8 +22,5 @@ export function markSeen(songId: string): void {
   // Remove if already present, push to end (most recent last)
   const updated = [...seen.filter((id) => id !== songId), songId]
   // Keep only last SEEN_LIMIT
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(updated.slice(-SEEN_LIMIT)),
-  )
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated.slice(-SEEN_LIMIT)))
 }

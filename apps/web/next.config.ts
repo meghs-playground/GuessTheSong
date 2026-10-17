@@ -24,6 +24,14 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  async rewrites() {
+    return [
+      {
+        source: '/analytics.html',
+        destination: '/analytics',
+      },
+    ]
+  },
 }
 
 export default nextConfig

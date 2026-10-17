@@ -30,7 +30,11 @@ export interface AliasRow {
  * Uses a fast ORDER BY RANDOM() LIMIT 1 — fine at 5k-20k rows.
  * For larger catalogues, precompute ID lists per era in Redis.
  */
-export async function getRandomSong(sql: Sql, era?: Era, excludeIds: string[] = []): Promise<SongRow | null> {
+export async function getRandomSong(
+  sql: Sql,
+  era?: Era,
+  excludeIds: string[] = [],
+): Promise<SongRow | null> {
   // Build exclude clause — only applies if we have IDs to exclude
   // If excluding would leave no results, fall back to ignoring excludes
   const result = era

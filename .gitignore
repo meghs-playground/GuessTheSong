@@ -10,3 +10,8 @@ dist/
 *.log
 coverage/
 .turbo/
+*.local.json
+playlists.local.json
+scripts/playlists.local.json
+analytics-data.local.json
+

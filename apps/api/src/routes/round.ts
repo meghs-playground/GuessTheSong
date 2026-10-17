@@ -26,7 +26,10 @@ roundRouter.get('/', zValidator('query', roundQuerySchema), async (c) => {
   const { era, exclude } = c.req.valid('query')
 
   const excludeIds = exclude
-    ? exclude.split(',').filter((id) => /^[a-zA-Z0-9_-]+$/.test(id)).slice(0, 50)
+    ? exclude
+        .split(',')
+        .filter((id) => /^[a-zA-Z0-9_-]+$/.test(id))
+        .slice(0, 50)
     : []
 
   const sql = createDb(c.env.DATABASE_URL)
@@ -36,10 +39,7 @@ roundRouter.get('/', zValidator('query', roundQuerySchema), async (c) => {
     return c.json({ error: 'No songs found for the given filter' }, 404)
   }
 
-  const roundToken = await signToken(
-    { songId: song.id, era: era ?? null },
-    c.env.ROUND_SECRET,
-  )
+  const roundToken = await signToken({ songId: song.id, era: era ?? null }, c.env.ROUND_SECRET)
 
   const body: RoundStartResponse = {
     roundToken,

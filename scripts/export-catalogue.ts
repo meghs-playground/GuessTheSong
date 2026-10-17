@@ -28,17 +28,17 @@ const sql = neon(DATABASE_URL)
 
 interface CatalogueEntry {
   id: string
-  t: string    // canonical title
-  f: string    // film
-  y: number    // year
-  a: string[]  // artists
+  t: string // canonical title
+  f: string // film
+  y: number // year
+  a: string[] // artists
   al: string[] // normalized aliases
 }
 
 async function main() {
   console.log('Exporting catalogue…')
 
-  const songs = await sql`
+  const songs = (await sql`
     SELECT s.id, s.canonical_title, s.film, s.year, s.artists,
            COALESCE(
              ARRAY_AGG(sa.alias) FILTER (WHERE sa.alias IS NOT NULL),
@@ -49,7 +49,7 @@ async function main() {
     WHERE s.active = true
     GROUP BY s.id
     ORDER BY s.popularity_score DESC, s.year DESC
-  ` as Array<{
+  `) as Array<{
     id: string
     canonical_title: string
     film: string

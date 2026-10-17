@@ -1,25 +1,29 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* ── Dhun color palette ─────────────────────────────── */
-  --color-ink:          #000000;
-  --color-paper:        #ffffff;
-  --color-frosted:      #a7e2e3;
-  --color-maya:         #6bbaec;
-  --color-apricot:      #f9c784;
-  --color-orchid:       #efbdeb;
-  --color-teal:         #5f7367;
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-frosted: #a7e2e3;
+  --color-maya: #6bbaec;
+  --color-apricot: #f9c784;
+  --color-orchid: #efbdeb;
+  --color-teal: #5f7367;
 
   /* ── Typography ─────────────────────────────────────── */
   --font-sans: 'Space Grotesk', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
 
   /* ── Brutalist shadow/border ────────────────────────── */
-  --shadow-brutal:    4px 4px 0 #000;
+  --shadow-brutal: 4px 4px 0 #000;
   --shadow-brutal-sm: 2px 2px 0 #000;
 }
 
 /* ── Reset ───────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 html {
   font-family: var(--font-sans);
@@ -52,7 +56,9 @@ body {
   box-shadow: 4px 4px 0 #000;
   font-weight: 700;
   cursor: pointer;
-  transition: box-shadow 80ms ease, transform 80ms ease;
+  transition:
+    box-shadow 80ms ease,
+    transform 80ms ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -72,11 +78,22 @@ body {
 }
 
 /* ── Clip step states ────────────────────────────────── */
-.step-locked   { background: #fff; }
-.step-current  { background: #6bbaec; }
-.step-unlocked { background: #f9c784; }
-.step-wrong    { background: #efbdeb; }
-.step-correct  { background: #5f7367; color: #fff; }
+.step-locked {
+  background: #fff;
+}
+.step-current {
+  background: #6bbaec;
+}
+.step-unlocked {
+  background: #f9c784;
+}
+.step-wrong {
+  background: #efbdeb;
+}
+.step-correct {
+  background: #5f7367;
+  color: #fff;
+}
 
 /* ── Focus ring ──────────────────────────────────────── */
 :focus-visible {
@@ -85,18 +102,28 @@ body {
 }
 
 /* ── Sticker tilt ────────────────────────────────────── */
-.sticker-left  { transform: rotate(-2deg); }
-.sticker-right { transform: rotate(2deg); }
+.sticker-left {
+  transform: rotate(-2deg);
+}
+.sticker-right {
+  transform: rotate(2deg);
+}
 
 /* ── Spin animation ──────────────────────────────────── */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
-.spin { animation: spin 0.8s linear infinite; }
+.spin {
+  animation: spin 0.8s linear infinite;
+}
 
 /* ── Reduced motion ──────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }

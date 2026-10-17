@@ -53,10 +53,7 @@ export async function signToken(
   return `${payloadB64}${SEPARATOR}${base64url(sig)}`
 }
 
-export async function verifyToken(
-  token: string,
-  secret: string,
-): Promise<TokenPayload | null> {
+export async function verifyToken(token: string, secret: string): Promise<TokenPayload | null> {
   const parts = token.split(SEPARATOR)
   if (parts.length !== 2) return null
   const [payloadB64, sigB64] = parts as [string, string]
@@ -72,7 +69,9 @@ export async function verifyToken(
   if (!valid) return null
 
   try {
-    const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(payloadB64))) as TokenPayload
+    const payload = JSON.parse(
+      new TextDecoder().decode(base64urlDecode(payloadB64)),
+    ) as TokenPayload
     // Check TTL
     if (Math.floor(Date.now() / 1000) - payload.iat > TOKEN_TTL_SECONDS) return null
     return payload
